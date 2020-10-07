@@ -1,0 +1,39 @@
+<% include includes/header %>
+
+<main class="container-fluid grey-text text-darken-1">
+  <h3 style="padding-left: 2%">Sent Mails:-</h3>
+  <div class="container-fluid" style="padding-right: 2%; padding-left: 2%">
+    <% if(locals.mails) { %>
+    <ul class="collapsible">
+      <% mails.forEach(mail => { %>
+      <li>
+        <div class="collapsible-header">
+          <div class="row">
+            <div class="s12">
+              <span>
+                <b> To:</b> <%= mail.email %>
+                <b style="margin-left: 200px;"> Subject: </b> <%= mail.subject
+                %>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="collapsible-body center">
+          <span class="container">
+            <b> Message : </b><br /><%- mail.message %></span
+          >
+        </div>
+      </li>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <ul class="collection">
+      <li class="collection-item">
+        No Email Exist .
+      </li>
+    </ul>
+    <% } %>
+  </div>
+</main>
+
+<% include includes/footer %>

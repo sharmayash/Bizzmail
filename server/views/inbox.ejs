@@ -1,0 +1,73 @@
+<% include includes/header %>
+
+<main class="container-fluid">
+  <h4 class="grey-text center">Inbox</h4>
+
+  <div class="container-fluid">
+    <% if(locals.mails && locals.mailBody) { %>
+    <div class="row">
+      <div class="col s4 m4 l4" style="height: 600px; overflow: scroll;">
+        <ul class="collection">
+          <% mails.forEach(mail => { %>
+          <li id="<%= mail.UID %>" class="collection-item">
+            <%= mail.title %>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+      <div class="col s8 m8 l8" style="height: 600px; overflow: scroll;">
+        <div class="card">
+          <h4>Message Info</h4>
+          <div id="html">
+            <%- mailBody.html %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } else if(locals.mails) { %>
+    <div class="row">
+      <div class="col s4 m4 l4" style="height: 600px; overflow: scroll;">
+        <ul class="collection left">
+          <% mails.forEach(mail => { %>
+          <li
+            id="<%= mail.UID %>"
+            class="collection-item hoverable"
+            style="padding: 5%;"
+          >
+            <i class="grey-text"> <%= mail.from.address %></i> <br />
+            <hr style="max-width: 200px" />
+            <b class="grey-text darken-1">Subject:</b> <%= mail.title %>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+      <div
+        class="col s8 m8 l8 center"
+        style="height: 600px; overflow: scroll;"
+      ></div>
+    </div>
+    <% } else { %>
+    <h5 class="grey-text">Add Account First</h5>
+    <a href="#" class="btn grey addAccFromInbox">Add Account</a>
+    <% } %>
+  </div>
+</main>
+
+<script>
+  $(".collection li").click(function() {
+    axios
+      .post("/inbox/openMsg", { uid: this.id })
+      .then(res => {
+        $(".s8").empty();
+        let msg = $(res.data)
+          .find("#html")
+          .html();
+        let div = $("<div class='card'></div>");
+        $($.parseHTML(msg)).appendTo(div);
+        $(div).appendTo(".s8");
+      })
+      .catch(err => console.log(err));
+  });
+</script>
+
+<% include includes/footer %>
